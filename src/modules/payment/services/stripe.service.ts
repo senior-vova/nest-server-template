@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { UserDocument } from "src/models/users.model";
+import { User, UserDocument } from "src/models/users.model";
 import Stripe from "stripe";
 import * as Interface from "./interface";
 
@@ -15,7 +15,7 @@ export class StripeService {
   private readonly failedUrl: string;
 
   constructor(
-    @InjectModel("UserModel")
+    @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
     private _configs: ConfigService,
   ) {

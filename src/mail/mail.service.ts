@@ -1,6 +1,7 @@
-import { HttpService, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { MailMessages, MessagesTypesEnum } from "./mail.data";
 import { ConfigService } from "@nestjs/config";
+import { HttpService } from "@nestjs/axios";
 import {
   PepipostEndpoints,
   PepipostTemplateI,

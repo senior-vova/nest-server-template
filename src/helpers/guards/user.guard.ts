@@ -2,13 +2,13 @@ import { ExecutionContext, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Observable } from "rxjs";
-import { UserDocument } from "src/models/users.model";
+import { User, UserDocument } from "src/models/users.model";
 import { RequestI } from "../utils";
 
 @Injectable()
 export class UserAuthGuard {
   constructor(
-    @InjectModel("UserModel")
+    @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
 

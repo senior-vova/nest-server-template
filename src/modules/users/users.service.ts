@@ -58,7 +58,7 @@ export class UserService {
   }
 
   async Follow(followerID: Types.ObjectId, userID: string): Promise<any> {
-    if (Compare(followerID, userID)) return Promise.reject(MESSAGE.USER.SUBSCRIBE_YOURSELF);
+    if (Compare(followerID, userID)) return Promise.reject();
     const [follower, user] = await Promise.all([
       this.userModel.findById(followerID),
       this.userModel.findById(userID),
@@ -187,10 +187,7 @@ export class UserService {
     const user = await this.userModel.findById(id);
     return this.userModel.findByIdAndUpdate(
       id,
-      {
-        name: data.name,
-        telephone: data?.telephone || user?.telephone,
-      },
+      { name: data.name },
       {
         new: true,
         projection: projections.self,

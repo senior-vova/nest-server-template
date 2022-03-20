@@ -4,12 +4,12 @@ import { Response } from "express";
 import { isValidObjectId, Model } from "mongoose";
 import { ReturnUnauthorized } from "src/helpers/responses";
 import { RequestI } from "src/helpers/utils";
-import { UserDocument } from "src/models/users.model";
+import { User, UserDocument } from "src/models/users.model";
 
 @Injectable()
 export class UserMiddleware implements NestMiddleware {
   constructor(
-    @InjectModel("UserModel")
+    @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
 

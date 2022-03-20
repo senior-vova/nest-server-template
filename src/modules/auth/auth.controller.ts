@@ -1,4 +1,4 @@
-import { Body, Res, Req, Get } from "@nestjs/common";
+import { Body, Res, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CodeDto, ConfirmCodeDto, EmailDto, LoginDto, RegisterDto } from "./auth.dto";
 import { Response } from "express";
@@ -12,8 +12,7 @@ import {
 } from "src/helpers/responses";
 import { isString } from "class-validator";
 import { JWTService } from "nest-jwt-module";
-import { SuperController } from "src/helpers/decorators";
-import { RoleEnum } from "../users/users.dto";
+import { AuthEndpoint, SuperController } from "src/helpers/decorators";
 import { UseCatch } from "src/helpers/decorators/endpoint.helpers";
 
 @SuperController("auth")
@@ -49,8 +48,6 @@ export class AuthController {
   @AuthEndpoint("POST", "register")
   async Register(@Body() body: RegisterDto, @Res() res: Response) {
     const resp = await this.authService.register(body);
-    if (body.role != RoleEnum.student && !isString(body.telephone))
-      return ReturnBadRequest(res, "Wrong telephone");
     if (resp) return ReturnCreated(res, { status: resp });
     else ReturnError(res);
   }
