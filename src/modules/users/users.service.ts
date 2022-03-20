@@ -1,10 +1,8 @@
 import { Model, Types } from "mongoose";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { UpdateUser, projections, GetUsersByNameQuery } from "./users.dto";
-import { generateNotificationText, notificationEnum } from "src/notification/notifications.dto";
 import { User, UserDocument } from "src/models/users.model";
-import { NotificationsService } from "src/notification/notification.service";
 import { Compare, FindCompare } from "../../helpers/functions";
 import { ConfigService } from "@nestjs/config";
 import { MESSAGE } from "src/helpers/messages";
@@ -14,8 +12,6 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
-    @Inject(forwardRef(() => NotificationsService))
-    private readonly notificationsService: NotificationsService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -69,26 +65,10 @@ export class UserService {
       ? { $pull: { followers: follower._id } }
       : { $addToSet: { followers: follower._id } };
 
-    const [newUser] = await Promise.all([
-      this.userModel.findByIdAndUpdate(userID, action, {
-        new: true,
-        projection: projections.base,
-      }),
-      new Promise((res) => {
-        if (!isFollowed) {
-          res(
-            this.notificationsService.sendNotification(
-              Types.ObjectId(userID),
-              notificationEnum.follow,
-              generateNotificationText.follow(follower.name),
-              { name: follower.name, userId: follower._id },
-            ),
-          );
-        } else {
-          res(null);
-        }
-      }),
-    ]);
+    const newUser = await this.userModel.findByIdAndUpdate(userID, action, {
+      new: true,
+      projection: projections.base,
+    });
     return newUser;
   }
 

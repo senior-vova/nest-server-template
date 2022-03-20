@@ -10,7 +10,6 @@ interface PrivateTechnicalInfoI {
   isActive?: boolean;
   isBlock?: boolean;
   blockedTime?: Date;
-  stripeCustomerId?: string;
 }
 
 export enum RoleEnum {
@@ -36,7 +35,6 @@ export class User {
       isActive: { type: Boolean, default: false },
       isBlock: { type: Boolean, default: false },
       blockedTime: { type: Date, default: null },
-      stripeCustomerId: { type: String, default: "" },
     }),
   )
   privateInfo: Record<keyof PrivateTechnicalInfoI, any>;
