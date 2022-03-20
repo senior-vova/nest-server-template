@@ -1,0 +1,28 @@
+FROM node:16.13.2-alpine AS build-stage
+
+WORKDIR /var/backend
+
+COPY package.json .
+
+RUN npm install --prefer-offline --no-audit --progress=false
+
+COPY . .
+
+RUN mkdir dist && mkdir uploads && npm run build
+
+FROM node:16.13.2-alpine
+
+ARG NODE_ENV=stage
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /var/backend
+
+COPY package.json .
+
+RUN npm install --only=prod --prefer-offline --no-audit --progress=false
+
+COPY . .
+
+COPY --from=build-stage /var/backend/dist ./dist
+
+CMD [ "node", "dist/src/main" ]
